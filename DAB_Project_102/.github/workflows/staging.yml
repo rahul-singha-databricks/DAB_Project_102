@@ -25,7 +25,7 @@ jobs:
 
       - uses: databricks/setup-cli@main
 
-      - run: databricks bundle deploy -t staging_rs
+      - run: databricks bundle deploy -t staging
         env:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
           DATABRICKS_BUNDLE_ENV: staging_rs
@@ -42,7 +42,7 @@ jobs:
 
       - uses: databricks/setup-cli@main
 
-      - run: databricks bundle run -t staging_rs model_training_job
+      - run: databricks bundle run -t staging model_training_job
         env:
           DATABRICKS_TOKEN:  ${{ secrets.DATABRICKS_TOKEN }}
           DATABRICKS_BUNDLE_ENV: staging_rs

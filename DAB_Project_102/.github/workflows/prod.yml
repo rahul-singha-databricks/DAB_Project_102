@@ -25,10 +25,10 @@ jobs:
 
       - uses: databricks/setup-cli@main
 
-      - run: databricks bundle deploy -t prod_rs
+      - run: databricks bundle deploy -t prod
         env:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-          DATABRICKS_BUNDLE_ENV: prod_rs
+          DATABRICKS_BUNDLE_ENV: prod
 
   pipeline_update:
     name: "Run pipeline update"
@@ -42,7 +42,7 @@ jobs:
 
       - uses: databricks/setup-cli@main
 
-      - run: databricks bundle run -t prod_rs model_training_job
+      - run: databricks bundle run -t prod model_training_job
         env:
           DATABRICKS_TOKEN:  ${{ secrets.DATABRICKS_TOKEN }}
-          DATABRICKS_BUNDLE_ENV: prod_rs
+          DATABRICKS_BUNDLE_ENV: prod
