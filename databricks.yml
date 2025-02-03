@@ -31,7 +31,6 @@ targets:
     variables:
       catalog_name: dev_rs
     workspace:
-      # TODO: add dev workspace URL
       host: https://adb-984752964297111.11.azuredatabricks.net
 
   staging:

@@ -6,6 +6,12 @@ dbutils.widgets.dropdown("env", "dev", ["dev", "staging", "prod"], "Environment 
 env = dbutils.widgets.get("env")
 
 # COMMAND ----------
+dbutils.widgets.text("model_name", defaultValue= "titanic_model")
+model_name = dbutils.widgets.get("model_name")
+model_name = f"{env}_rs.project_102.{model_name}"
+print(model_name)
+
+# COMMAND ----------
 import mlflow
 import mlflow.sklearn
 from sklearn.model_selection import train_test_split
@@ -87,22 +93,17 @@ print(class_report)
 
 # COMMAND ----------
 # Calculate metrics
-accuracy = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
 
-# Log model and metrics with MLflow
-mlflow.set_experiment(f"/Users/rahul.singha@databricks.com/{env}_rs.project_102.titanic_model")
+eval_data = X_test
+eval_data["target"] = y_test
+input_example = X_train.iloc[[0]]
 
-with mlflow.start_run():
-    mlflow.log_metric("accuracy", accuracy)
-    mlflow.log_metric("precision", precision)
-    mlflow.log_metric("recall", recall)
-    mlflow.log_metric("f1_score", f1)
-    run_id = mlflow.active_run().info.run_id
-    print(f"Run ID: {run_id}")
-    signature = infer_signature(X_train, y_train)
-    input_example = X_train.iloc[[0]]
-    mlflow.sklearn.log_model(model, "logistic_regression_model", registered_model_name = f"{env}_rs.project_102.titanic_model",input_example = input_example )
-    # mlflow.register_model(f"runs:/{run_id}/model", "dev_rs.project_102.titanic_model")
+with mlflow.start_run() as run:
+    model_info = mlflow.sklearn.log_model(model, "logistic_regression_model", registered_model_name = model_name,input_example = input_example )
+    result = mlflow.evaluate(
+        model_info.model_uri,
+        eval_data,
+        targets="target",
+        model_type="classifier",
+        evaluators=["default"],
+    )
