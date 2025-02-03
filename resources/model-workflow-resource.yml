@@ -26,15 +26,28 @@ resources:
             notebook_path: ../training/notebooks/Train.py
             base_parameters:
               env: ${bundle.target}
-          
-        - task_key: Serve_ENDPoints
+              model_name: "titanic_model"
+        
+        - task_key: Validate
           job_cluster_key: model_training_job_cluster
           depends_on:
             - task_key: Train
           notebook_task:
-            notebook_path: ../deployment/model_deployment/deploy.py
+            notebook_path: ../validation/notebooks/ModelValidation.py
             base_parameters:
               env: ${bundle.target}
+              model_name: "titanic_model"
+          
+        - task_key: Create_Endpoints
+          job_cluster_key: model_training_job_cluster
+          depends_on:
+            - task_key: Validate
+          notebook_task:
+            notebook_path: ../create_endpoints/notebook/deploy.py
+            base_parameters:
+              env: ${bundle.target}
+              model_name: "titanic_model"
+              infa_table_name: "titanic_model"
       schedule:
         quartz_cron_expression: "0 0 9 * * ?" # daily at 9am
         timezone_id: UTC
