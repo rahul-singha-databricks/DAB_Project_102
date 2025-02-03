@@ -107,3 +107,4 @@ print("latest_version = ",latest_version)
 
 # COMMAND ----------
 set_champion_model(model_name, champion_version, latest_version)
+#added comment
