@@ -1,5 +1,9 @@
 # Databricks notebook source
 ##################################################################################
+%pip install --upgrade "mlflow-skinny[databricks]"
+%pip install mlflow>=2.4.1
+dbutils.library.restartPython()
+# COMMAND ----------
 # Set up widgets to define environment and table name
 ##################################################################################
 
@@ -19,6 +23,8 @@ infa_table_name = dbutils.widgets.get("infa_table_name")
 
 import mlflow
 from mlflow.deployments import get_deploy_client
+from mlflow.tracking import MlflowClient
+mlflow.set_registry_uri("databricks-uc")
 
 # COMMAND ----------
 ##################################################################################

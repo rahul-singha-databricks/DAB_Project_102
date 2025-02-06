@@ -1,5 +1,9 @@
 # Databricks notebook source
 ##################################################################################
+%pip install --upgrade "mlflow-skinny[databricks]"
+%pip install mlflow>=2.4.1
+dbutils.library.restartPython()
+# COMMAND ----------
 # Initialize widgets for selecting environment and model name
 ##################################################################################
 
@@ -25,6 +29,7 @@ import tempfile
 import traceback
 import mlflow
 from mlflow.tracking import MlflowClient
+mlflow.set_registry_uri("databricks-uc")
 
 # Initialize MLflow Client
 client = MlflowClient()
@@ -184,3 +189,4 @@ print(f"Latest Model Version: {latest_version}")
 
 set_champion_model(model_name, champion_version, latest_version)
 print("Champion model selection process completed.")
+#test comment

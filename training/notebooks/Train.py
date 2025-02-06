@@ -1,5 +1,10 @@
 # Databricks notebook source
 ##################################################################################
+%pip install --upgrade "mlflow-skinny[databricks]"
+%pip install mlflow>=2.4.1
+dbutils.library.restartPython()
+# COMMAND ----------
+
 # Set up Databricks widgets for selecting the environment and model name
 ##################################################################################
 
@@ -38,6 +43,8 @@ from sklearn.metrics import (
     f1_score,
 )
 from mlflow.models.signature import infer_signature
+from mlflow.tracking import MlflowClient
+mlflow.set_registry_uri("databricks-uc")
 
 # COMMAND ----------
 ##################################################################################
@@ -157,6 +164,9 @@ eval_data["target"] = y_test
 # Get an input example for MLflow model logging
 input_example = X_train.iloc[[0]]
 
+# Infer model signature
+signature = infer_signature(X_train, model.predict(X_train))
+
 # Start an MLflow run to log the model
 with mlflow.start_run() as run:
     # Log the trained model to MLflow
@@ -165,6 +175,7 @@ with mlflow.start_run() as run:
         "logistic_regression_model",
         registered_model_name=model_name,
         input_example=input_example,
+        signature=signature,
     )
 
     # Evaluate model using MLflow
@@ -175,3 +186,4 @@ with mlflow.start_run() as run:
         model_type="classifier",
         evaluators=["default"],
     )
+    
