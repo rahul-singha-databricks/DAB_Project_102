@@ -18,7 +18,9 @@ on:
 jobs:
   deploy:
     name: "Deploy bundle"
-    runs-on: ubuntu-latest
+    runs-on: 
+      group: databricks-field-eng-protected-runner-group
+      labels: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
