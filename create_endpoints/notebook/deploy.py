@@ -1,5 +1,9 @@
 # Databricks notebook source
 ##################################################################################
+%pip install --upgrade "mlflow-skinny[databricks]"
+%pip install mlflow>=2.4.1
+dbutils.library.restartPython()
+# COMMAND ----------
 
 dbutils.widgets.dropdown("env", "dev", ["dev", "staging", "prod"], "Environment Name")
 env = dbutils.widgets.get("env")
@@ -12,8 +16,9 @@ infa_table_name = dbutils.widgets.get("infa_table_name")
 # COMMAND ----------
 import mlflow 
 from mlflow.deployments import get_deploy_client
-
 from mlflow.tracking import MlflowClient
+from mlflow.tracking import MlflowClient
+mlflow.set_registry_uri("databricks-uc")
 client = MlflowClient(registry_uri="databricks-uc")
 endpoint_client = get_deploy_client("databricks")
 api_url = mlflow.utils.databricks_utils.get_webapp_url()
@@ -108,4 +113,4 @@ else:
             },
         },
     )
-
+#added test commit
